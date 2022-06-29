@@ -7,6 +7,7 @@
 
 ## 程序准备
 ### 开启vpn,并将系统代理模式调成全局模式  
+![IMG_20220629_145305_edit_51026953673983](https://user-images.githubusercontent.com/61792863/176373720-884d2e51-a569-459e-ac81-68c97a1871af.jpg)  
 ### 下载youtube_dl
 pip install youtube_dl  
 ### 下载Aria2（可选，多线程爬取）
@@ -16,3 +17,6 @@ pip install youtube_dl
 ### 1.设置url获取路径  
 将url路径设置为从官网下载的数据链接集合的txt文件  
 ![image](https://user-images.githubusercontent.com/61792863/176373174-6104751d-1201-454f-bba6-6734d955d6b2.png)  
+### 2. 设置保存路径及用户名密码
+
+## 运行程序
