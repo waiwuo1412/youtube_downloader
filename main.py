@@ -49,7 +49,7 @@ class MyLogger(object):
 
 
 ydl_opts = {
-    'quiet': True,  # 
+    'quiet': True,  # 启动安静模式。如果与——verbose一起使用，则将日志打印到stderr
     'username': USER_NAME,
     'password': PASSWORD,
     'logger': MyLogger(),
