@@ -18,7 +18,7 @@ PREFIX = 'https://www.youtube.com/watch?v='
 SAVE_PATH = ''  # 设置保存路径
 # 某些视频可能需要登录才可以查看 [选填]
 USER_NAME = 'null'  # 设置youtube用户名
-PASSWORD = 'null'  #设置youtube密码
+PASSWORD = 'null'  # 设置youtube密码
 THREAD_NUM = 8  # 设置爬取的线程数量 [选填]
 
 # 配置logging参数
@@ -55,10 +55,10 @@ ydl_opts = {
     'logger': MyLogger(),
     'retries': 50
     # 'postprocessors': [{
-        #     'key': 'FFmpegExtractAudio',
-        #     'preferredcodec': suffix,
-        #     'preferredquality': '192',
-        # }],
+    #     'key': 'FFmpegExtractAudio',
+    #     'preferredcodec': suffix,
+    #     'preferredquality': '192',
+    # }],
 }
 
 
@@ -76,7 +76,8 @@ def type_download(refer, mytype):
             print('downloading...')
             ydl.download([PREFIX + refer])
     except yt_dlp.utils.DownloadError as e:
-      if not 'unavailable' in str(e) and not 'Private' in str(e) and not 'terminated' in str(e):
+        # 三种youtube视频源丢失的报错
+        if not 'unavailable' in str(e) and not 'Private' in str(e) and not 'terminated' in str(e):
             if mytype == 'video+audio':
                 ret = subprocess.call(
                     'yt-dlp --format bestvideo+bestaudio ' + PREFIX + refer + ' -o ' + save_path + ' -R 50')
@@ -86,7 +87,7 @@ def type_download(refer, mytype):
                 logging.error('          ' + refer + '          ' + str(e))
                 print(refer + ' ' + mytype + str(e))
                 time.sleep(1)
-      else:
+        else:
             logging.error('          ' + refer + '          ' + str(e))
             print(refer + ' ' + mytype + str(e))
             time.sleep(1)
@@ -102,7 +103,7 @@ def download(refer):
 
 
 if __name__ == '__main__':
-  # 根据需要数据格式和需要自行修改
+    # 根据需要数据格式和需要自行修改
     with concurrent.futures.ThreadPoolExecutor(max_workers=THREAD_NUM) as executor:
         for id_item in os.listdir(TARGET):
             # 这里是根据从CelebVox2官网下载的文件的文件夹名,形如vox2_test_txt\txt\id03969\6iCOXUNN9Qc的形式,提取文件夹名6iCOXUNN9Qc生成url
