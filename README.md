@@ -1,11 +1,11 @@
 # Youtube爬取数据说明
-## 下载数据链接  
+## 下载数据链接 【以VoxCeleb2数据集中的Youtube视频为例】
 访问[VoxCeleb2数据集官网](https://www.robots.ox.ac.uk/~vgg/data/voxceleb/vox2.html "VoxCeleb2数据集官网")  
 找到要下载的数据集链接  
 ![image](https://user-images.githubusercontent.com/61792863/176355768-db611be7-ecdf-4960-a45f-a2130dbb7395.png)  
 下载并解压  
 
-## 程序准备
+## 准备
 ### 开启vpn,并将系统代理模式调成全局模式  
 ![IMG_20220629_145305_edit_51026953673983](https://user-images.githubusercontent.com/61792863/176373720-884d2e51-a569-459e-ac81-68c97a1871af.jpg)  
 ### 下载yt-dlp
