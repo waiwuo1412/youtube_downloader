@@ -94,6 +94,7 @@ if __name__ == '__main__':
   # 根据需要数据格式和需要自行修改
     with concurrent.futures.ThreadPoolExecutor(max_workers=THREAD_NUM) as executor:
         for id_item in os.listdir(TARGET):
+            # 这里是根据从CelebVox2官网下载的文件的文件夹名,形如vox2_test_txt\txt\id03969\6iCOXUNN9Qc的形式,提取文件夹名6iCOXUNN9Qc生成url
             if os.path.isdir(TARGET + os.sep + id_item):
                 URLS = [refer for refer in os.listdir(TARGET + os.sep + id_item)]
                 executor.map(download, URLS)
