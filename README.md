@@ -36,3 +36,7 @@ pip install yt_dlp  【注意！此处是下划线】
 ![image](https://user-images.githubusercontent.com/61792863/176422794-f54a7490-82c8-4fb4-9311-faef9da9fd8d.png)  
 ![image](https://user-images.githubusercontent.com/61792863/176422882-325bbdec-aead-44a3-ba40-c5855de45f71.png)  
 ![image](https://user-images.githubusercontent.com/61792863/176423247-9af780a7-228c-48b6-bcd2-8474467f3340.png)  
+
+## 更多学习
+[pt-dlp命令行参数速览版](https://blog.csdn.net/z_y_z_l/article/details/121015231 "pt-dlp命令行参数速览版") 
+[pt-dlp链接](https://github.com/yt-dlp/yt-dlp "pt-dlp链接") 
