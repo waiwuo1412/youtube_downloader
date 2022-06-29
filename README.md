@@ -19,16 +19,18 @@ pip install yt_dlp  【注意！此处是下划线】
 ### 1.设置url获取路径  
 将url路径设置为从官网下载的数据链接集合的txt文件  
 ![image](https://user-images.githubusercontent.com/61792863/176373174-6104751d-1201-454f-bba6-6734d955d6b2.png)  
-### 2. 设置保存路径及用户名密码
+### 2. 设置保存路径  
 ![image](https://user-images.githubusercontent.com/61792863/176422303-f9963300-242b-4adc-9421-582b769a87d4.png)  
-### 3. 设置爬取视频的线程数量  
+### 3. 设置用户名及密码【选填】  
+
+### 4. 设置爬取视频的线程数量【选填】
 ![image](https://user-images.githubusercontent.com/61792863/176422109-53f91cf1-cecc-43e8-8165-5daf41f998a4.png)
 
 
-## 运行程序
+## 运行程序  
 程序会在你选定的存储路径生成一个video文件夹、一个audio文件夹和一个log.txt的文件，记载没有成功下载的文件信息  
 
-## 运行结果
+## 运行结果  
 ![image](https://user-images.githubusercontent.com/61792863/176422493-06dfc30f-7f83-4a95-b3e8-be66250f94ac.png)  
 ![image](https://user-images.githubusercontent.com/61792863/176422635-4dac0f40-62ee-4572-aecd-ce3bc18ad3e7.png)  
 ![image](https://user-images.githubusercontent.com/61792863/176422794-f54a7490-82c8-4fb4-9311-faef9da9fd8d.png)  
