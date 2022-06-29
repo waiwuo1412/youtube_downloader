@@ -17,8 +17,8 @@ TARGET = ''  # 设置url获取路径
 PREFIX = 'https://www.youtube.com/watch?v='
 SAVE_PATH = ''  # 设置保存路径
 # 某些视频可能需要登录才可以查看 [选填]
-USER_NAME = null  # 设置youtube用户名
-PASSWORD = null  #设置youtube密码
+USER_NAME = 'null'  # 设置youtube用户名
+PASSWORD = 'null'  #设置youtube密码
 THREAD_NUM = 8  # 设置爬取的线程数量 [选填]
 
 # 配置logging参数
@@ -76,15 +76,20 @@ def type_download(refer, mytype):
             print('downloading...')
             ydl.download([PREFIX + refer])
     except yt_dlp.utils.DownloadError as e:
-        if not 'unavailable' in str(e) and not 'Private' in str(e) and not 'terminated' in str(e):
+      if not 'unavailable' in str(e) and not 'Private' in str(e) and not 'terminated' in str(e):
             if mytype == 'video+audio':
-                subprocess.call('yt-dlp --format bestvideo+bestaudio ' + PREFIX + refer + ' -o ' + save_path + ' -R 50')
+                ret = subprocess.call(
+                    'yt-dlp --format bestvideo+bestaudio ' + PREFIX + refer + ' -o ' + save_path + ' -R 50')
             else:
-                subprocess.call('yt-dlp --format best' + mytype + PREFIX + refer + ' -o ' + save_path + ' -R 50')
-        # 写入日志
-        logging.error('          ' + refer + '          ' + str(e))
-        print(refer + ' ' + mytype + str(e))
-        time.sleep(1)
+                ret = subprocess.call('yt-dlp --format best' + mytype + PREFIX + refer + ' -o ' + save_path + ' -R 50')
+            if ret:
+                logging.error('          ' + refer + '          ' + str(e))
+                print(refer + ' ' + mytype + str(e))
+                time.sleep(1)
+      else:
+            logging.error('          ' + refer + '          ' + str(e))
+            print(refer + ' ' + mytype + str(e))
+            time.sleep(1)
     else:
         time.sleep(1)
         print(refer + ' ' + mytype + ' done')
