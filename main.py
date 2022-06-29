@@ -16,10 +16,10 @@ import yt_dlp
 TARGET = ''  # 设置url获取路径
 PREFIX = 'https://www.youtube.com/watch?v='
 SAVE_PATH = ''  # 设置保存路径
-# 某些视频可能需要登录才可以查看[选填]
-USER_NAME = null  # 设置youtube用户名,可以不填
-PASSWORD = null  #设置youtube密码，可以不填
-THREAD_NUM = 8  # 设置爬取的线程数量，可以不填
+# 某些视频可能需要登录才可以查看 [选填]
+USER_NAME = null  # 设置youtube用户名
+PASSWORD = null  #设置youtube密码
+THREAD_NUM = 8  # 设置爬取的线程数量 [选填]
 
 # 配置logging参数
 logging.basicConfig(level=logging.ERROR,
