@@ -11,6 +11,8 @@
 ### 下载yt-dlp
 pip install yt_dlp  【注意！此处是下划线】   
 ![image](https://user-images.githubusercontent.com/61792863/176421634-79282626-40b1-41b9-b90f-0197686c1431.png)  
+### 下载ffmpeg（可选，如果需要音视频结合）  
+
 
 ## 配置  
 ![image](https://user-images.githubusercontent.com/61792863/176422261-440288ac-0475-49e7-8fea-5853f4231889.png)  
