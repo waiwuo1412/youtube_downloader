@@ -9,7 +9,7 @@
 ### 开启vpn,并将系统代理模式调成全局模式  
 ![IMG_20220629_145305_edit_51026953673983](https://user-images.githubusercontent.com/61792863/176373720-884d2e51-a569-459e-ac81-68c97a1871af.jpg)  
 ### 下载yt-dlp
-pip install yt_dlp  【注意！此处是下划线】 
+pip install yt_dlp  【注意！此处是下划线】   
 ![image](https://user-images.githubusercontent.com/61792863/176421634-79282626-40b1-41b9-b90f-0197686c1431.png)  
 
 ## 配置  
