@@ -76,6 +76,7 @@ def type_download(refer, mytype):
                 subprocess.call('yt-dlp --format bestvideo+bestaudio ' + PREFIX + refer + ' -o ' + save_path + ' -R 50')
             else:
                 subprocess.call('yt-dlp --format best' + mytype + PREFIX + refer + ' -o ' + save_path + ' -R 50')
+        # 写入日志
         logging.error('          ' + refer + '          ' + str(e))
         print(refer + ' ' + mytype + str(e))
         time.sleep(1)
