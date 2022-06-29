@@ -21,7 +21,7 @@ USER_NAME = 'null'  # 设置youtube用户名
 PASSWORD = 'null'  # 设置youtube密码
 THREAD_NUM = 8  # 设置爬取的线程数量 [选填]
 
-# 配置logging参数
+# 配置logging参数,部分参数列表在另一个py中,按需自取
 logging.basicConfig(level=logging.ERROR,
                     filename=SAVE_PATH + os.sep + 'log.txt',
                     filemode='a',
