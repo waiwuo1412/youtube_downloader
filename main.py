@@ -1,9 +1,9 @@
 # !/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-' a *** module '
+' a youtube_downloader module '
 
-__author__ = 'Shiqiang Lin'
+__author__ = 'waiwuo 1412'
 
 import concurrent
 import os.path
@@ -91,6 +91,7 @@ def download(refer):
 
 
 if __name__ == '__main__':
+  # 根据需要数据格式和需要自行修改
     with concurrent.futures.ThreadPoolExecutor(max_workers=THREAD_NUM) as executor:
         for id_item in os.listdir(TARGET):
             if os.path.isdir(TARGET + os.sep + id_item):
