@@ -5,5 +5,8 @@
 ![image](https://user-images.githubusercontent.com/61792863/176355768-db611be7-ecdf-4960-a45f-a2130dbb7395.png)  
 下载并解压  
 
-## 程序准备  
-下载youtube_dl  
+## 程序准备
+### 开启vpn,并将系统代理模式调成全局模式  
+### 下载youtube_dl
+pip install youtube_dl  
+### 下载Aria2  
