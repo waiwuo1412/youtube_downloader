@@ -1,112 +1,121 @@
 # !/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-' a youtube_downloader module '
-
-__author__ = 'waiwuo 1412'
-
-import concurrent
-import os.path
-import logging
-import time
+import concurrent.futures
 import os
-import subprocess
+import logging
 import yt_dlp
 
-TARGET = ''  # 设置url获取路径
-PREFIX = 'https://www.youtube.com/watch?v='
-SAVE_PATH = ''  # 设置保存路径
-# 某些视频可能需要登录才可以查看 [选填]
-USER_NAME = 'null'  # 设置youtube用户名
-PASSWORD = 'null'  # 设置youtube密码
-THREAD_NUM = 8  # 设置爬取的线程数量 [选填]
+# --- 配置区域 ---
+SAVE_PATH = 'downloads'  # 默认保存路径
+THREAD_NUM = 5           # 线程数量
+LOG_FILE = 'download_log.txt'
+# 如果需要下载会员/限制级视频，请导出浏览器的cookies为txt文件并填入路径，否则留空
+COOKIES_FILE = ''        # 例如: 'cookies.txt' 
 
-# 配置logging参数,部分参数列表在另一个py中,按需自取
-logging.basicConfig(level=logging.ERROR,
-                    filename=SAVE_PATH + os.sep + 'log.txt',
-                    filemode='a',
-                    format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
+# 设置日志
+if not os.path.exists(SAVE_PATH):
+    os.makedirs(SAVE_PATH)
 
+logging.basicConfig(
+    level=logging.INFO, # 建议平时用INFO，出错看ERROR
+    filename=os.path.join(SAVE_PATH, LOG_FILE),
+    filemode='a',
+    format='%(asctime)s - %(threadName)s - %(levelname)s: %(message)s'
+)
+
+def get_ydl_opts(save_folder):
+    """
+    生成独立的配置选项，防止多线程冲突
+    """
+    opts = {
+        # 格式：下载最佳视频+最佳音频，并自动合并为mp4。如果失败则回退到最佳单一文件。
+        'format': 'bestvideo+bestaudio/best',
+        'merge_output_format': 'mp4', 
+        
+        # 输出模板：保存路径/标题.扩展名
+        'outtmpl': os.path.join(save_folder, '%(title)s.%(ext)s'),
+        
+        # 忽略错误，继续下一个
+        'ignoreerrors': True,
+        'no_warnings': True,
+        'quiet': True, 
+        
+        # 重试次数
+        'retries': 10,
+        
+        # 如果有cookies文件则加载
+        'cookiefile': COOKIES_FILE if COOKIES_FILE else None,
+        
+        # 进度钩子
+        'progress_hooks': [my_hook],
+    }
+    return opts
 
 def my_hook(d):
+    """下载进度回调"""
     if d['status'] == 'finished':
-        print('Done downloading, now converting ... ')
-        time.sleep(1)
-    if d['status'] == 'downloading':
-        print('downloading...')
+        print(f"[{d.get('info_dict', {}).get('title', 'Unknown')}] 下载完成，正在处理/合并...")
 
+def download_single_url(url):
+    """
+    单个URL下载处理函数
+    """
+    if not url or not url.strip():
+        return
 
-class MyLogger(object):
-    def debug(self, msg):
-        pass
-
-    def warning(self, msg):
-        pass
-
-    def error(self, msg):
-        # print(msg)
-        time.sleep(1)
-
-
-ydl_opts = {
-    'quiet': True,  # 启动安静模式。如果与——verbose一起使用，则将日志打印到stderr
-    'username': USER_NAME,
-    'password': PASSWORD,
-    'logger': MyLogger(),
-    'retries': 50
-    # 'postprocessors': [{
-    #     'key': 'FFmpegExtractAudio',
-    #     'preferredcodec': suffix,
-    #     'preferredquality': '192',
-    # }],
-}
-
-
-def type_download(refer, mytype):
-    print('refer:' + refer + ' ' + mytype + ' start download')
-    save_path = os.path.join(SAVE_PATH, mytype)
-    if mytype == 'video+audio':
-        ydl_opts['format'] = 'bestvideo+bestaudio'
-    else:
-        ydl_opts['format'] = 'best' + mytype
-    ydl_opts['outtmpl'] = save_path + os.path.sep + '%(title)s.%(ext)s'
+    url = url.strip()
+    print(f"开始处理: {url}")
+    
+    # 为每个线程创建独立的配置，解决竞争问题
+    current_opts = get_ydl_opts(SAVE_PATH)
 
     try:
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            print('downloading...')
-            ydl.download([PREFIX + refer])
+        with yt_dlp.YoutubeDL(current_opts) as ydl:
+            # 提取信息但不下载，先检查标题等信息（可选）
+            # info = ydl.extract_info(url, download=False)
+            
+            # 开始下载
+            ydl.download([url])
+            logging.info(f"成功下载: {url}")
+            
     except yt_dlp.utils.DownloadError as e:
-        # 三种youtube视频源丢失的报错
-        if not 'unavailable' in str(e) and not 'Private' in str(e) and not 'terminated' in str(e):
-            if mytype == 'video+audio':
-                ret = subprocess.call(
-                    'yt-dlp --format bestvideo+bestaudio ' + PREFIX + refer + ' -o ' + save_path + ' -R 50')
-            else:
-                ret = subprocess.call('yt-dlp --format best' + mytype + PREFIX + refer + ' -o ' + save_path + ' -R 50')
-            if ret:
-                logging.error('          ' + refer + '          ' + str(e))
-                print(refer + ' ' + mytype + str(e))
-                time.sleep(1)
-        else:
-            logging.error('          ' + refer + '          ' + str(e))
-            print(refer + ' ' + mytype + str(e))
-            time.sleep(1)
-    else:
-        time.sleep(1)
-        print(refer + ' ' + mytype + ' done')
+        error_msg = str(e)
+        logging.error(f"下载失败 {url}: {error_msg}")
+        print(f"❌ 下载出错: {url} - {error_msg}")
+    except Exception as e:
+        logging.exception(f"未知错误 {url}")
+        print(f"❌ 未知错误: {url} - {e}")
 
-
-def download(refer):
-    type_download(refer, 'video')
-    type_download(refer, 'audio')
-    # type_download(refer,'video+audio')
-
+def run_downloader(url_list):
+    """
+    多线程执行器
+    """
+    print(f"即将在 {THREAD_NUM} 个线程中处理 {len(url_list)} 个任务...")
+    
+    with concurrent.futures.ThreadPoolExecutor(max_workers=THREAD_NUM) as executor:
+        # 使用 map 自动分配任务
+        executor.map(download_single_url, url_list)
+        
+    print("所有任务处理完毕。")
 
 if __name__ == '__main__':
-    # 根据需要数据格式和需要自行修改
-    with concurrent.futures.ThreadPoolExecutor(max_workers=THREAD_NUM) as executor:
-        for id_item in os.listdir(TARGET):
-            # 这里是根据从CelebVox2官网下载的文件的文件夹名,形如vox2_test_txt\txt\id03969\6iCOXUNN9Qc的形式,提取文件夹名6iCOXUNN9Qc生成url
-            if os.path.isdir(TARGET + os.sep + id_item):
-                URLS = [refer for refer in os.listdir(TARGET + os.sep + id_item)]
-                executor.map(download, URLS)
+    # --- 方式1：从文件读取URL列表 (推荐) ---
+    input_file = 'urls.txt'
+    target_urls = []
+    
+    if os.path.exists(input_file):
+        with open(input_file, 'r', encoding='utf-8') as f:
+            target_urls = [line.strip() for line in f if line.strip() and not line.startswith('#')]
+    else:
+        # --- 方式2：如果没有文件，可以使用硬编码列表测试 ---
+        print(f"未找到 {input_file}，使用测试列表。")
+        target_urls = [
+            'https://www.youtube.com/watch?v=dQw4w9WgXcQ', # 测试链接
+            # 'https://www.youtube.com/watch?v=XXXXXX',
+        ]
+
+    if target_urls:
+        run_downloader(target_urls)
+    else:
+        print("没有需要下载的URL。请创建 urls.txt 文件，每行一个链接。")
